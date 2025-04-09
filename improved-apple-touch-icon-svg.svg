@@ -1,0 +1,32 @@
+<svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+   <rect width="180" height="180" rx="40" fill="#121212"/>
+   <g opacity="0.96">
+      <!-- Code Background -->
+      <rect x="25" y="25" width="130" height="130" rx="8" fill="#1e1e1e" />
+   </g>
+   <g opacity="0.95">
+      <!-- Code Lines -->
+      <rect x="35" y="35" width="70" height="4" rx="2" fill="#00b7ff" />
+      <rect x="35" y="45" width="50" height="4" rx="2" fill="#6e42ff" />
+      <rect x="40" y="55" width="80" height="4" rx="2" fill="#ff2975" />
+      <rect x="40" y="65" width="60" height="4" rx="2" fill="#27c93f" />
+   </g>
+   <!-- Clock Face -->
+   <circle cx="105" cy="105" r="40" stroke="#ff2975" stroke-width="4" fill="none"/>
+   <!-- Clock Ticks -->
+   <line x1="105" y1="75" x2="105" y2="80" stroke="#ffbd2e" stroke-width="3" />
+   <line x1="105" y1="130" x2="105" y2="135" stroke="#ffbd2e" stroke-width="3" />
+   <line x1="75" y1="105" x2="80" y2="105" stroke="#ffbd2e" stroke-width="3" />
+   <line x1="130" y1="105" x2="135" y2="105" stroke="#ffbd2e" stroke-width="3" />
+   <!-- Clock Hands -->
+   <line x1="105" y1="105" x2="105" y2="80" stroke="#00b7ff" stroke-width="4" stroke-linecap="round"/>
+   <line x1="105" y1="105" x2="120" y2="115" stroke="#6e42ff" stroke-width="4" stroke-linecap="round"/>
+   <circle cx="105" cy="105" r="5" fill="#ff2975"/>
+   
+   <!-- Code Brackets -->
+   <path d="M40 150L50 140L60 150L50 160L40 150Z" fill="#00b7ff" />
+   <path d="M140 150L130 140L120 150L130 160L140 150Z" fill="#00b7ff" />
+   
+   <!-- Semester Label -->
+   <text x="90" y="160" text-anchor="middle" font-family="Consolas, 'Courier New', monospace" font-size="16" font-weight="bold" fill="#ffbd2e">2025.1</text>
+</svg>
