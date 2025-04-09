@@ -27,9 +27,6 @@
   <!-- Web App Manifest (para dispositivos modernos inclusive Safari) -->
   <link rel="manifest" href="site.webmanifest">
 
-  <!-- Ícone específico para Safari -->
-  <link rel="mask-icon" href="safari-pinned-tab.svg" color="#00b7ff">
-
   <!-- Meta tags para melhor aparência em iOS -->
   <meta name="application-name" content="Horário Acadêmico">
   
@@ -49,6 +46,13 @@
       --text-primary: #ffffff;
       --text-secondary: #b3b3b3;
       --grid-line: rgba(255, 255, 255, 0.08);
+      
+      /* Novas variáveis para melhorar adaptação mobile */
+      --header-height: 60px;
+      --sidebar-width: 70px;
+      --card-border-radius: 8px;
+      --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition-speed: 0.3s;
     }
     
     * {
@@ -56,6 +60,7 @@
       padding: 0;
       box-sizing: border-box;
       font-family: 'Consolas', 'Courier New', monospace;
+      -webkit-tap-highlight-color: transparent;
     }
     
     body {
@@ -69,19 +74,20 @@
       background-image: 
         radial-gradient(circle at 25% 15%, rgba(0, 183, 255, 0.05) 0%, transparent 25%),
         radial-gradient(circle at 75% 85%, rgba(110, 66, 255, 0.05) 0%, transparent 25%);
-      overflow: hidden;
+      overflow-x: hidden;
       position: relative;
     }
     
     /* Partículas elegantes no fundo */
     .particles-container {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
       z-index: -1;
+      pointer-events: none;
     }
     
     .particle {
@@ -119,6 +125,7 @@
       margin-bottom: 24px;
       text-align: center;
       position: relative;
+      padding: 8px;
     }
     
     h1 {
@@ -177,21 +184,22 @@
     
     .cell {
       background-color: var(--bg-card);
-      border-radius: 4px;
-      transition: all 0.3s ease;
+      border-radius: var(--card-border-radius);
+      transition: all var(--transition-speed) ease;
       min-height: 80px;
     }
     
     .class-card {
       height: 100%;
       padding: 12px 8px;
-      border-radius: 4px;
+      border-radius: var(--card-border-radius);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      transition: all 0.3s ease;
+      transition: all var(--transition-speed) ease;
       position: relative;
       overflow: hidden;
+      box-shadow: var(--card-shadow);
     }
     
     .class-card::before {
@@ -204,7 +212,7 @@
       background: var(--class-color, var(--accent-primary));
     }
     
-    .class-card:hover {
+    .class-card:hover, .class-card:active {
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     }
@@ -311,7 +319,241 @@
       background: linear-gradient(135deg, rgba(110, 66, 255, 0.1), rgba(110, 66, 255, 0.02));
     }
     
-    /* Responsividade para Mobile */
+    /* Melhorias para Navegação Mobile */
+    .day-navigation {
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+    
+    .nav-btn {
+      background-color: var(--bg-card);
+      color: var(--text-secondary);
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all var(--transition-speed) ease;
+      font-size: 18px;
+    }
+    
+    .nav-btn:hover, .nav-btn:active {
+      background-color: var(--accent-primary);
+      color: var(--text-primary);
+    }
+    
+    .current-day {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+    
+    /* Menu de acesso rápido para dias da semana no mobile */
+    .day-tabs {
+      display: none;
+      width: 100%;
+      margin-bottom: 15px;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-behavior: smooth;
+      padding-bottom: 5px;
+    }
+    
+    .day-tabs::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .day-tab {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 20px;
+      margin-right: 8px;
+      background-color: var(--bg-card);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-speed) ease;
+      border: 1px solid transparent;
+      font-size: 14px;
+    }
+    
+    .day-tab.active {
+      background-color: transparent;
+      color: var(--text-primary);
+      border-color: var(--accent-primary);
+    }
+    
+    /* Bottom Navigation para mobile */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(18, 18, 18, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+      z-index: 100;
+      padding: 10px 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .bottom-nav-content {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 12px;
+      position: relative;
+      transition: all var(--transition-speed) ease;
+    }
+    
+    .bottom-nav-item.active {
+      color: var(--accent-primary);
+    }
+    
+    .bottom-nav-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+    
+    /* Calendário da semana atual para mobile */
+    .week-calendar {
+      display: none;
+      width: 100%;
+      margin-bottom: 20px;
+      background-color: var(--bg-card);
+      border-radius: var(--card-border-radius);
+      padding: 15px;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .week-header {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+      color: var(--text-secondary);
+    }
+    
+    .week-days {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .calendar-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 14%;
+      cursor: pointer;
+    }
+    
+    .day-name {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+    }
+    
+    .day-number {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      font-size: 14px;
+      transition: all var(--transition-speed) ease;
+      position: relative;
+    }
+    
+    .calendar-day.active .day-number {
+      background-color: var(--accent-primary);
+      color: var(--text-primary);
+    }
+    
+    .calendar-day.has-class .day-number::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: var(--accent-tertiary);
+    }
+    
+    /* Barra flutuante de hoje */
+    .today-floating-bar {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(18, 18, 18, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 100;
+      padding: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      transform: translateY(-100%);
+      transition: transform 0.3s ease;
+    }
+    
+    .today-floating-bar.visible {
+      transform: translateY(0);
+    }
+    
+    .today-classes {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      padding-bottom: 5px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    
+    .today-classes::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .today-card {
+      min-width: 200px;
+      padding: 10px;
+      border-radius: var(--card-border-radius);
+      background-color: var(--bg-card);
+      box-shadow: var(--card-shadow);
+      position: relative;
+    }
+    
+    .today-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--class-color, var(--accent-primary));
+    }
+    
+    /* Responsividade para Mobile - Melhorada */
     @media screen and (max-width: 900px) {
       .timetable {
         grid-template-columns: 90px repeat(5, 1fr);
@@ -338,7 +580,11 @@
     
     @media screen and (max-width: 768px) {
       body {
-        padding: 12px;
+        padding: 12px 12px 70px;
+      }
+      
+      .container {
+        padding-bottom: 40px;
       }
       
       .timetable {
@@ -348,8 +594,15 @@
       
       .mobile-day {
         margin-bottom: 24px;
-        border-radius: 8px;
+        border-radius: var(--card-border-radius);
         overflow: hidden;
+        box-shadow: var(--card-shadow);
+        animation: fadeIn 0.5s ease;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
       }
       
       .mobile-day-header {
@@ -383,6 +636,88 @@
       .semester {
         font-size: 16px;
       }
+      
+      /* Ativar elementos específicos para mobile */
+      .day-navigation,
+      .day-tabs,
+      .bottom-nav,
+      .week-calendar {
+        display: flex;
+      }
+      
+      /* Espaço para o bottom nav */
+      body {
+        padding-bottom: 80px;
+      }
+      
+      /* Ajustes para scroll suave */
+      .mobile-view {
+        scroll-behavior: smooth;
+      }
+      
+      /* Otimizações de espaço */
+      .code-comment {
+        font-size: 11px;
+      }
+      
+      /* Touch friendly */
+      .class-card {
+        min-height: 70px;
+      }
+      
+      .class-card:active {
+        transform: scale(0.98);
+      }
+      
+      /* Melhor visibilidade para horários */
+      .time-cell {
+        font-size: 12px;
+        font-weight: bold;
+      }
+    }
+    
+    /* Modo escuro otimizado */
+    @media (prefers-color-scheme: dark) {
+      .class-card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      }
+    }
+    
+    /* Melhorias para visualização do horário de hoje */
+    .today-indicator {
+      display: inline-block;
+      background-color: var(--accent-tertiary);
+      color: var(--text-primary);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 10px;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    
+    /* Acesso rápido a aulas hoje - widget flutuante */
+    .quick-access-today {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      z-index: 50;
+      font-size: 24px;
+      transform: translateY(100px);
+      transition: transform 0.3s ease;
+    }
+    
+    .quick-access-today.visible {
+      transform: translateY(0);
     }
     
     /* Toggle para visualização desktop/mobile */
@@ -415,11 +750,47 @@
     .mobile-view {
       display: none;
     }
+    
+    /* Modo de acessibilidade para melhor legibilidade */
+    .accessibility-mode .class-title {
+      font-size: 16px;
+    }
+    
+    .accessibility-mode .class-time {
+      font-size: 14px;
+    }
+    
+    /* Loader para conteúdo */
+    .loader {
+      display: none;
+      width: 30px;
+      height: 30px;
+      border: 3px solid rgba(0, 183, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--accent-primary);
+      animation: spin 1s infinite linear;
+      margin: 20px auto;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
   <!-- Container de partículas -->
   <div class="particles-container" id="particles"></div>
+  
+  <!-- Barra flutuante com aulas de hoje (aparece ao scrollar) -->
+  <div class="today-floating-bar" id="todayFloatingBar">
+    <h3>Aulas de Hoje <span class="today-indicator">Quarta</span></h3>
+    <div class="today-classes" id="todayClasses">
+      <!-- Classes dinâmicas via JavaScript -->
+    </div>
+  </div>
+  
+  <!-- Botão de acesso rápido às aulas de hoje -->
+  <div class="quick-access-today" id="quickAccessToday">📚</div>
   
   <div class="container">
     <div class="terminal-header">
@@ -435,6 +806,60 @@
       <div class="subtitle">Ciência da Computação</div>
       <div class="code-comment">// Organização é a chave para um bom código e um bom semestre</div>
     </header>
+    
+    <!-- Visualização do Calendário Semanal - Mobile -->
+    <div class="week-calendar">
+      <div class="week-header">Abril 2025</div>
+      <div class="week-days">
+        <div class="calendar-day has-class" data-day="Segunda">
+          <div class="day-name">Seg</div>
+          <div class="day-number">07</div>
+        </div>
+        <div class="calendar-day has-class" data-day="Terça">
+          <div class="day-name">Ter</div>
+          <div class="day-number">08</div>
+        </div>
+        <div class="calendar-day active has-class" data-day="Quarta">
+          <div class="day-name">Qua</div>
+          <div class="day-number">09</div>
+        </div>
+        <div class="calendar-day" data-day="Quinta">
+          <div class="day-name">Qui</div>
+          <div class="day-number">10</div>
+        </div>
+        <div class="calendar-day has-class" data-day="Sexta">
+          <div class="day-name">Sex</div>
+          <div class="day-number">11</div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-name">Sáb</div>
+          <div class="day-number">12</div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-name">Dom</div>
+          <div class="day-number">13</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Navegação por abas para dias da semana - Mobile -->
+    <div class="day-tabs" id="dayTabs">
+      <div class="day-tab" data-day="segunda">Segunda</div>
+      <div class="day-tab" data-day="terca">Terça</div>
+      <div class="day-tab active" data-day="quarta">Quarta</div>
+      <div class="day-tab" data-day="quinta">Quinta</div>
+      <div class="day-tab" data-day="sexta">Sexta</div>
+    </div>
+    
+    <!-- Navegação com botões para dias da semana - Mobile -->
+    <div class="day-navigation">
+      <button class="nav-btn prev-day" id="prevDay">&#10094;</button>
+      <span class="current-day" id="currentDay">Quarta</span>
+      <button class="nav-btn next-day" id="nextDay">&#10095;</button>
+    </div>
+    
+    <!-- Loader para transição entre dias -->
+    <div class="loader" id="dayLoader"></div>
     
     <div class="view-toggle">
       <button class="toggle-button active" id="desktop-toggle">Visão Semanal</button>
@@ -546,10 +971,10 @@
       </div>
     </div>
     
-    <!-- Visualização Mobile -->
-    <div class="mobile-view">
+    <!-- Visualização Mobile (Aprimorada) -->
+    <div class="mobile-view" id="mobileView">
       <!-- Segunda-feira -->
-      <div class="mobile-day">
+      <div class="mobile-day" id="segunda">
         <div class="mobile-day-header">Segunda-feira</div>
         <div class="mobile-schedule">
           <div class="time-cell">18:30<br>|<br>20:10</div>
@@ -573,7 +998,7 @@
       </div>
       
       <!-- Terça-feira -->
-      <div class="mobile-day">
+      <div class="mobile-day" id="terca">
         <div class="mobile-day-header">Terça-feira</div>
         <div class="mobile-schedule">
           <div class="time-cell">18:30<br>|<br>20:10</div>
@@ -597,8 +1022,8 @@
       </div>
       
       <!-- Quarta-feira -->
-      <div class="mobile-day">
-        <div class="mobile-day-header">Quarta-feira</div>
+      <div class="mobile-day" id="quarta">
+        <div class="mobile-day-header">Quarta-feira <span class="today-indicator">Hoje</span></div>
         <div class="mobile-schedule">
           <div class="time-cell">18:30<br>|<br>20:10</div>
           <div class="cell">
@@ -621,7 +1046,7 @@
       </div>
       
       <!-- Quinta-feira -->
-      <div class="mobile-day">
+      <div class="mobile-day" id="quinta">
         <div class="mobile-day-header">Quinta-feira</div>
         <div class="mobile-schedule">
           <div class="time-cell">Sem aulas</div>
@@ -630,7 +1055,7 @@
       </div>
       
       <!-- Sexta-feira -->
-      <div class="mobile-day">
+      <div class="mobile-day" id="sexta">
         <div class="mobile-day-header">Sexta-feira</div>
         <div class="mobile-schedule">
           <div class="time-cell">08:00<br>|<br>10:00</div>
@@ -673,14 +1098,41 @@
     </div>
   </div>
   
+  <!-- Menu de navegação inferior para mobile -->
+  <div class="bottom-nav">
+    <div class="bottom-nav-content">
+      <a href="#" class="bottom-nav-item active" id="navToday">
+        <div class="bottom-nav-icon">📋</div>
+        <span>Hoje</span>
+      </a>
+      <a href="#" class="bottom-nav-item" id="navWeek">
+        <div class="bottom-nav-icon">📆</div>
+        <span>Semana</span>
+      </a>
+      <a href="#" class="bottom-nav-item" id="navSettings">
+        <div class="bottom-nav-icon">⚙️</div>
+        <span>Ajustes</span>
+      </a>
+      <a href="#" class="bottom-nav-item" id="navNotify">
+        <div class="bottom-nav-icon">🔔</div>
+        <span>Alertas</span>
+      </a>
+    </div>
+  </div>
+  
   <script>
-    // Script para criar partículas no fundo
+    // Script melhorado para interatividade mobile
     document.addEventListener("DOMContentLoaded", function() {
+      // Gerenciamento de partículas no fundo
       const particlesContainer = document.getElementById("particles");
       const colors = ['#00b7ff', '#6e42ff', '#ff2975', '#27c93f', '#ffbd2e'];
       
+      // Otimização para mobile: reduzir partículas em dispositivos com tela menor
+      const isMobile = window.innerWidth <= 768;
+      const particleCount = isMobile ? 20 : 50;
+      
       // Criar partículas
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < particleCount; i++) {
         createParticle();
       }
       
@@ -733,13 +1185,212 @@
         desktopToggle.classList.remove('active');
       });
       
-      // Detectar automaticamente se é mobile
+      // Código para navegação mobile entre dias da semana
+      const days = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+      const dayElements = days.map(day => document.getElementById(day));
+      let currentDayIndex = 2; // Quarta-feira como padrão (índice 2)
+      
+      function showDay(index) {
+        // Esconder todos os dias
+        dayElements.forEach(day => {
+          if (day) day.style.display = 'none';
+        });
+        
+        // Mostrar o dia atual
+        if (dayElements[index]) {
+          dayElements[index].style.display = 'block';
+          
+          // Atualizar indicador de dia atual
+          document.getElementById('currentDay').textContent = capitalizeFirstLetter(days[index]) + '-feira';
+          
+          // Atualizar as tabs
+          const dayTabs = document.querySelectorAll('.day-tab');
+          dayTabs.forEach(tab => tab.classList.remove('active'));
+          dayTabs[index].classList.add('active');
+          
+          // Centralizar a tab selecionada no scroll horizontal
+          const tabsContainer = document.getElementById('dayTabs');
+          const activeTab = dayTabs[index];
+          tabsContainer.scrollLeft = activeTab.offsetLeft - tabsContainer.offsetWidth / 2 + activeTab.offsetWidth / 2;
+          
+          // Atualizar calendário
+          const calendarDays = document.querySelectorAll('.calendar-day');
+          calendarDays.forEach(day => day.classList.remove('active'));
+          calendarDays[index].classList.add('active');
+          
+          // Atualizar navegação inferior
+          if (index === currentDayIndex) {
+            document.getElementById('navToday').classList.add('active');
+          } else {
+            document.getElementById('navToday').classList.remove('active');
+          }
+        }
+      }
+      
+      // Botões de navegação entre dias
+      document.getElementById('prevDay').addEventListener('click', function() {
+        showLoader();
+        setTimeout(() => {
+          currentDayIndex = (currentDayIndex > 0) ? currentDayIndex - 1 : days.length - 1;
+          showDay(currentDayIndex);
+          hideLoader();
+        }, 300);
+      });
+      
+      document.getElementById('nextDay').addEventListener('click', function() {
+        showLoader();
+        setTimeout(() => {
+          currentDayIndex = (currentDayIndex < days.length - 1) ? currentDayIndex + 1 : 0;
+          showDay(currentDayIndex);
+          hideLoader();
+        }, 300);
+      });
+      
+      // Navegação por abas
+      const dayTabs = document.querySelectorAll('.day-tab');
+      dayTabs.forEach((tab, index) => {
+        tab.addEventListener('click', function() {
+          showLoader();
+          setTimeout(() => {
+            currentDayIndex = index;
+            showDay(currentDayIndex);
+            hideLoader();
+          }, 300);
+        });
+      });
+      
+      // Navegação pelo calendário
+      const calendarDays = document.querySelectorAll('.calendar-day');
+      calendarDays.forEach((day, index) => {
+        if (index < days.length) { // Apenas dias úteis
+          day.addEventListener('click', function() {
+            showLoader();
+            setTimeout(() => {
+              currentDayIndex = index;
+              showDay(currentDayIndex);
+              hideLoader();
+            }, 300);
+          });
+        }
+      });
+      
+      // Navegação pelo menu inferior
+      document.getElementById('navToday').addEventListener('click', function(e) {
+        e.preventDefault();
+        showLoader();
+        setTimeout(() => {
+          // Determinar o dia atual real (em um cenário real, este seria baseado na data)
+          // Para fins de demonstração, consideramos quarta-feira
+          currentDayIndex = 2; // Quarta-feira
+          showDay(currentDayIndex);
+          hideLoader();
+        }, 300);
+      });
+      
+      document.getElementById('navWeek').addEventListener('click', function(e) {
+        e.preventDefault();
+        toggleWeekView();
+      });
+      
+      // Botão de acesso rápido
+      const quickAccessBtn = document.getElementById('quickAccessToday');
+      let lastScrollPos = 0;
+      
+      window.addEventListener('scroll', function() {
+        // Mostrar/ocultar botão de acesso rápido
+        if (window.scrollY > 300 && window.innerWidth <= 768) {
+          quickAccessBtn.classList.add('visible');
+        } else {
+          quickAccessBtn.classList.remove('visible');
+        }
+        
+        // Mostrar/ocultar barra flutuante baseado na direção do scroll
+        const currentScrollPos = window.scrollY;
+        const floatingBar = document.getElementById('todayFloatingBar');
+        
+        if (currentScrollPos > 300 && currentScrollPos < lastScrollPos) {
+          floatingBar.classList.add('visible');
+        } else {
+          floatingBar.classList.remove('visible');
+        }
+        
+        lastScrollPos = currentScrollPos;
+      });
+      
+      quickAccessBtn.addEventListener('click', function() {
+        scrollToToday();
+      });
+      
+      // Função para mostrar o loader durante transições
+      function showLoader() {
+        const loader = document.getElementById('dayLoader');
+        if (loader) loader.style.display = 'block';
+      }
+      
+      function hideLoader() {
+        const loader = document.getElementById('dayLoader');
+        if (loader) loader.style.display = 'none';
+      }
+      
+      // Função para alternar visão semanal em dispositivos móveis
+      function toggleWeekView() {
+        if (desktopView.style.display === 'none') {
+          desktopView.style.display = 'block';
+          mobileView.style.display = 'none';
+          desktopToggle.classList.add('active');
+          mobileToggle.classList.remove('active');
+        } else {
+          desktopView.style.display = 'none';
+          mobileView.style.display = 'block';
+          mobileToggle.classList.add('active');
+          desktopToggle.classList.remove('active');
+        }
+      }
+      
+      // Função para scrollar até a visualização do horário atual
+      function scrollToToday() {
+        const todayElement = document.getElementById('quarta'); // Em um app real, seria o dia atual
+        if (todayElement) {
+          todayElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+      
+      // Inicializar barra flutuante com aulas de hoje
+      function initTodayClasses() {
+        const todayClasses = document.getElementById('todayClasses');
+        if (!todayClasses) return;
+        
+        // Em um app real, essas seriam as aulas do dia atual
+        const classesForToday = [
+          { title: 'Mineração de Texto', time: '18:30 - 20:10', icon: '📊', type: 'mineracao' },
+          { title: 'Empreendedorismo', time: '20:10 - 21:50', icon: '💼', type: 'empreendedorismo' }
+        ];
+        
+        classesForToday.forEach(cls => {
+          const card = document.createElement('div');
+          card.className = `today-card ${cls.type}`;
+          card.innerHTML = `
+            <div class="class-title">${cls.title}</div>
+            <div class="class-time">${cls.time}</div>
+            <div class="class-icon">${cls.icon}</div>
+          `;
+          todayClasses.appendChild(card);
+        });
+      }
+      
+      // Função auxiliar para capitalizar primeira letra
+      function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+      }
+      
+      // Detectar automaticamente se é mobile e ajustar a visualização
       function checkMobile() {
         if (window.innerWidth <= 768) {
           desktopView.style.display = 'none';
           mobileView.style.display = 'block';
           mobileToggle.classList.add('active');
           desktopToggle.classList.remove('active');
+          showDay(currentDayIndex);
         } else {
           desktopView.style.display = 'block';
           mobileView.style.display = 'none';
@@ -748,9 +1399,22 @@
         }
       }
       
-      // Verificar tamanho da tela ao carregar e redimensionar
+      // Inicialização
+      initTodayClasses();
       checkMobile();
+      showDay(currentDayIndex);
       window.addEventListener('resize', checkMobile);
+      
+      // Service Worker para capacidades offline (apenas indicativo)
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => {
+            console.log('Service Worker registrado com sucesso!');
+          })
+          .catch(error => {
+            console.log('Falha ao registrar o Service Worker:', error);
+          });
+      }
     });
   </script>
 </body>
